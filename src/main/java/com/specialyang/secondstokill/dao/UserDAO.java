@@ -11,10 +11,15 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface UserDAO {
 
+    String FIELD = "id, nickname, password, salt, register_date, last_login_date, login_count";
+
+    String TABLE = "user";
+
     @Select("Select * from user where id = #{id}")
     User getUserById(long id);
 
-    @Insert("insert into user(id, username) values(#{id}, #{username})")
+    @Insert({"insert into", TABLE, "(", FIELD, ")", "values (#{id}, #{nickname}, " +
+            "#{password}, #{salt}, #{registerDate}, #{lastLoginDate}, #{loginCount})"})
     int insert(User user);
 
 }

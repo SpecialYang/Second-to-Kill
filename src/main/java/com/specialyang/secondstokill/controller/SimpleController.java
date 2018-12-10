@@ -3,7 +3,6 @@ package com.specialyang.secondstokill.controller;
 import com.specialyang.secondstokill.domain.User;
 import com.specialyang.secondstokill.entity.Response;
 import com.specialyang.secondstokill.service.UserService;
-import org.apache.ibatis.annotations.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,14 +39,30 @@ public class SimpleController {
         return Response.success(user);
     }
 
-    /**
-     * 测试事务
-     * @return
-     */
-    @RequestMapping("/db/tx")
+
+    @RequestMapping("/redis/get/id/{id}")
     @ResponseBody
-    public Response<Boolean> tx() {
-        userService.tx();
-        return Response.success(true);
+    public Response<User> redisGet(@PathVariable("id") long id) {
+        User result = userService.getUserByIdFromRedis(id);
+        return Response.success(result);
+    }
+
+    @RequestMapping("/redis/get/name/{name}")
+    @ResponseBody
+    public Response<User> redisGet(@PathVariable("name") String name) {
+        User result = userService.getUserByNameFromRedis(name);
+        return Response.success(result);
+    }
+
+    @RequestMapping("/redis/set/user")
+    @ResponseBody
+    public Response<User> setUserById() {
+        User user = new User();
+        user.setId((long) 10);
+        user.setNickname("haha");
+        userService.addUserByIdIntoRedis(user);
+        userService.addUserByNameIntoRedis(user);
+        User result = userService.getUserByIdFromRedis(user.getId());
+        return Response.success(result);
     }
 }
