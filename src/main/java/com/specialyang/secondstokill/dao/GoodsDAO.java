@@ -12,11 +12,11 @@ import org.apache.ibatis.annotations.Update;
 @Mapper
 public interface GoodsDAO {
 
-	@Select("select g.*, sg.stock_count, sg.start_date, sg.end_date, sg.price " +
+	@Select("select g.*, sg.stock_count, sg.start_date, sg.end_date, sg.second_to_kill_price " +
 			"from second_to_kill_goods sg left join goods g on sg.goods_id = g.id")
 	public List<GoodsVo> listGoodsVo();
 
-	@Select("select g.*, sg.stock_count, sg.start_date, sg.end_date, sg.price " +
+	@Select("select g.*, sg.stock_count, sg.start_date, sg.end_date, sg.second_to_kill_price " +
 			"from second_to_kill_goods sg left join goods g on sg.goods_id = g.id " +
 			"where g.id = #{goodsId}")
 	public GoodsVo getGoodsVoByGoodsId(@Param("goodsId") long goodsId);

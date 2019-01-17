@@ -16,7 +16,7 @@ public class Order {
 
     private long goodsId;
 
-    private long deliveryAddrid;
+    private long deliveryAddrId;
 
     private String goodsName;
 

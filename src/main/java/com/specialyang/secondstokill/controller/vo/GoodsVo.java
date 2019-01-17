@@ -11,7 +11,7 @@ import java.util.Date;
 @Data
 public class GoodsVo extends Goods {
 
-    private double price;
+    private double secondToKillPrice;
 
     private int stockCount;
 

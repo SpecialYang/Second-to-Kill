@@ -2,10 +2,12 @@ package com.specialyang.secondstokill.controller;
 
 import com.specialyang.secondstokill.controller.vo.GoodsVo;
 import com.specialyang.secondstokill.domain.Order;
+import com.specialyang.secondstokill.domain.SecondToKillOrder;
 import com.specialyang.secondstokill.domain.User;
 import com.specialyang.secondstokill.entity.CodeMsg;
 import com.specialyang.secondstokill.service.GoodsService;
 import com.specialyang.secondstokill.service.OrderService;
+import com.specialyang.secondstokill.service.SecondToKillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +26,9 @@ public class SecondToKillController {
     @Autowired
     OrderService orderService;
 
+    @Autowired
+    SecondToKillService secondToKillService;
+
     @RequestMapping("/secondtokill/{id}")
     public String secondToKill(Model model,
                                User user,
@@ -39,12 +44,16 @@ public class SecondToKillController {
             model.addAttribute("errmsg", CodeMsg.MIAOSHA_OVER.getMsg());
             return "miaosha_fail";
         }
-        Order order = orderService.getMiaoshaOrderByUserIdGoodsId(user.getId(), goodsId);
-        if (order != null) {
+        //减库存，下订单，写入秒杀订单
+        SecondToKillOrder secondToKillOrder = orderService.getSecondToKillOrderByUserIdGoodsId(user.getId(), goodsId);
+        if (secondToKillOrder != null) {
             model.addAttribute("errmsg", CodeMsg.REPEATE_MIAOSHA.getMsg());
             return "miaosha_fail";
         }
 
-        //减库存，下订单，写入秒杀订单
+        Order order = secondToKillService.miaosha(user, goods);
+        model.addAttribute("orderInfo", order);
+        model.addAttribute("goods", goods);
+        return "order_detail";
     }
 }
